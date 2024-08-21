@@ -2,15 +2,19 @@ package br.edu.unifil.lpoo.rh.visao;
 
 import br.edu.unifil.lpoo.rh.controle.Controle;
 import br.edu.unifil.lpoo.rh.modelo.*;
+import br.edu.unifil.lpoo.rh.servico.InputService;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 //Alunos: Miguel Henrique Duran e Aderson Batista da Silva
 public class Principal {
     public static void main(String[] args) {
         Controle controle = new Controle();
+        InputService inputService = new InputService();
         Scanner scan = new Scanner(System.in);
         String usuario = "";
+
 
         String nome;
         String matricula;
@@ -36,13 +40,33 @@ public class Principal {
                     String aux = "";
                     System.out.println("\nVOCÊ ESCOLHEU A OPÇÃO DE CADASTRAR FUNCIONÁRIO\n");
                     System.out.println("Qual o nome do funcionário?");
-                    nome = scan.nextLine();
+                    try {
+                        nome = inputService.inputString();
+                    } catch (NoSuchElementException e){
+                        System.err.println("Nenhum nome foi digitado, tente novamente.");
+                        break;
+                    }
+
 
                     System.out.println("Qual a matrícula do funcionário?");
-                    matricula = scan.nextLine();
+                    try {
+                        matricula = inputService.inputString();
+                    }catch (NoSuchElementException e){
+                        System.err.println("Nenhuma matrícula foi digitada, tente novamente.");
+                        break;
+                    }
+
 
                     System.out.println("Qual o salário do funcionário?");
-                    salario = Double.parseDouble(scan.nextLine());
+                    try {
+                        salario = inputService.inputDouble();
+                    }catch (NoSuchElementException p){
+                        System.err.println("Nenhum salário foi digitado, tente novamente.");
+                        break;
+                    }catch (NumberFormatException e){
+                        System.err.println("O salário digitado deve ser um número.");
+                        break;
+                    }
 
                     System.out.println("Qual o tipo de funcionário que deseja incluir?");
                     System.out.println("============\n" +
@@ -99,11 +123,12 @@ public class Principal {
                     System.out.println("Informe o número de matrícula do usuário: ");
                     matricula = scan.nextLine();
 
+                    //Tratamento de usuários não cadastrado
                     try {
                         Funcionario f = controle.getFuncionario(matricula);
                         System.out.println("Nome: " + f.getNome() + "\nSalário: " + f.getSalario() + "\nGanho mensal: " + f.getGanhoMensal());
-                    }catch (RuntimeException e){
-                        System.out.println("Funcionário não existe");
+                    }catch (NoSuchElementException e){
+                        System.err.println("O funcionário informado não foi encontrado");
                     }
 
                     break;
@@ -115,11 +140,10 @@ public class Principal {
 
                     try {
                         controle.excluirFuncionario(controle.getFuncionario(matricula));
-                    }catch (RuntimeException e){
-                        System.out.println("Funcionário não existe");
+                        System.out.println("Usuário deletado com sucesso.");
+                    }catch (NoSuchElementException e){
+                        System.err.println("O funcionário informado não foi encontrado");
                     }
-
-                    System.out.println("Usuário deletado com sucesso.");
                     break;
 
                 case "5":
@@ -133,11 +157,11 @@ public class Principal {
                     try {
                         Funcionario funcionario = controle.getFuncionario(matricula);
                         funcionario.setSalario(salario);
-                    } catch (RuntimeException e){
-                        System.out.println("Funcionário não existe");
+                        System.out.println("Salário alterado com sucesso.");
+                    } catch (NoSuchElementException e){
+                        System.err.println("O funcionário informado não foi encontrado");
                     }
 
-                    System.out.println("Salário alterado com sucesso.");
                     break;
 
                 case "0":

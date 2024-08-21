@@ -26,4 +26,5 @@ public class Producao extends Funcionario {
     public double getBonificacao() {
         return getGanhoMensal() * 0.07;
     }
+    
 }

@@ -4,6 +4,7 @@ import br.edu.unifil.lpoo.rh.modelo.Funcionario;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 //Alunos: Miguel Henrique Duran e Aderson Batista da Silva
 public class Controle {
@@ -32,7 +33,7 @@ public class Controle {
         return funcionarios.stream()
                 .filter(funcionario -> funcionario.getMatricula().equals(matricula))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
     }
 
     public void excluirFuncionario(Funcionario funcionario){
